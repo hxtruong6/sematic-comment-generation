@@ -36,7 +36,7 @@ def get_configs(init_file=None):
         # Create the parser
         parser = argparse.ArgumentParser()
         # Add an argument
-        parser.add_argument('--num_topic', type=int, required=True)
+        parser.add_argument('--num_topics', type=int, required=True)
         parser.add_argument('--num_words', type=int, required=False, default=10)
         parser.add_argument('--epoches', type=int, required=True)
         parser.add_argument('--global_topic', type=bool, required=False, default=False,
@@ -46,5 +46,5 @@ def get_configs(init_file=None):
         args = parser.parse_args()
         # Print "Hello" + the user input argument
         # return [args.num_topic, args.num_words, args.epoches]
-        return {'num_topics': args.num_topic, 'num_words': args.num_words, 'epoches': args.epoches,
+        return {'num_topics': args.num_topics, 'num_words': args.num_words, 'epoches': args.epoches,
                 'global_topic': args.global_topic}
