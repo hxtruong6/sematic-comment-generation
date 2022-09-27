@@ -1,6 +1,6 @@
 import gensim.corpora as corpora
 import pandas as pd
-from gensim.models import CoherenceModel, ldamodel
+from gensim.models import CoherenceModel, ldamodel, LdaMulticore
 
 
 def build_corpus(df: pd.DataFrame):
@@ -20,17 +20,17 @@ def build_corpus(df: pd.DataFrame):
 
 def lda_training(corpus, id2word, num_topics: int, epoches: int = 10, chunksize: int = 100,
                  per_word_topics: bool = True, distributed: bool = False):
-    lda_model = ldamodel.LdaModel(corpus=corpus,
-                                  id2word=id2word,
-                                  num_topics=num_topics,
-                                  random_state=100,
-                                  update_every=1,
-                                  chunksize=chunksize,
-                                  passes=epoches,
-                                  alpha='auto',
-                                  per_word_topics=per_word_topics,
-                                  distributed=distributed
-                                  )
+    lda_model = LdaMulticore(corpus=corpus,
+                             id2word=id2word,
+                             num_topics=num_topics,
+                             random_state=100,
+                             # update_every=1,
+                             chunksize=chunksize,
+                             passes=epoches,
+                             # alpha='auto',
+                             per_word_topics=per_word_topics,
+                             # distributed=distributed
+                             )
     return lda_model
 
 
