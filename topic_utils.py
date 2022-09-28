@@ -1,6 +1,7 @@
 import gensim.corpora as corpora
 import pandas as pd
 from gensim.models import CoherenceModel, ldamodel, LdaMulticore
+import multiprocessing
 
 
 def build_corpus(df: pd.DataFrame):
@@ -10,6 +11,7 @@ def build_corpus(df: pd.DataFrame):
         word_corpus = [str(sentences).split() for sentences in df['review_clean']]
         # Creating Document Term Matrix
         id2word = corpora.Dictionary(word_corpus)
+        print(f"Corpus len: {len(word_corpus)}")
         # Converting list of documents (corpus) into Document Term Matrix using the dictionary
         corpus = [id2word.doc2bow(text) for text in word_corpus]
 
@@ -20,16 +22,20 @@ def build_corpus(df: pd.DataFrame):
 
 def lda_training(corpus, id2word, num_topics: int, epoches: int = 10, chunksize: int = 100,
                  per_word_topics: bool = True, distributed: bool = False):
+    worker = multiprocessing.cpu_count()
+    print(f"worker: {worker}")
     lda_model = LdaMulticore(corpus=corpus,
                              id2word=id2word,
                              num_topics=num_topics,
                              random_state=100,
                              # update_every=1,
-                             chunksize=chunksize,
+                             # chunksize=chunksize,
                              passes=epoches,
+                             iterations=1000,
                              # alpha='auto',
                              per_word_topics=per_word_topics,
-                             # distributed=distributed
+                             # distributed=distributed,
+                             workers=worker - 1
                              )
     return lda_model
 
@@ -45,6 +51,6 @@ def evaluate_lda(lda_model: ldamodel, corpus, word_corpus, id2word):
     print('Perplexity: ', eval_lda['perplexity'])  # a measure of how good the model is. lower the better.
 
     # Compute Coherence Score
-    print(f"Coherence Score: {eval_lda['coherence_score']}\n")
+    print(f"Coherence Score: {eval_lda['coherence_score']}")
 
     return eval_lda
