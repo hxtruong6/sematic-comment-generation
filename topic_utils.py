@@ -11,9 +11,10 @@ def build_corpus(df: pd.DataFrame):
         word_corpus = [str(sentences).split() for sentences in df['review_clean']]
         # Creating Document Term Matrix
         id2word = corpora.Dictionary(word_corpus)
-        print(f"Corpus len: {len(word_corpus)}")
+        print('Number of unique tokens: %d' % len(id2word))
         # Converting list of documents (corpus) into Document Term Matrix using the dictionary
         corpus = [id2word.doc2bow(text) for text in word_corpus]
+        print('Number of documents: %d' % len(corpus))
 
         return {'word_corpus': word_corpus, 'id2word': id2word, 'corpus': corpus}
     except Exception as e:
@@ -29,7 +30,7 @@ def lda_training(corpus, id2word, num_topics: int, epoches: int = 10, chunksize:
                              num_topics=num_topics,
                              random_state=100,
                              # update_every=1,
-                             # chunksize=chunksize,
+                             # chunksize=30000,
                              passes=epoches,
                              iterations=1000,
                              # alpha='auto',

@@ -8,7 +8,8 @@ from datetime import datetime
 from os import makedirs, path
 import time
 
-
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 # now = datetime.now()  # current date and time
 # date_time = now.strftime("%Y%m%d-%H%M%S")
 # makedirs(f'results/{date_time}', exist_ok=True)
@@ -108,7 +109,7 @@ def handle_hotel_comments(df: pandas.DataFrame, num_words_list=None):
 
 def preprocessing(file_path: str):
     df = pd.read_csv(file_path)
-    df = df[:100]
+    # df = df[:10000]
     df['review_clean'].astype(dtype=str, copy=False)
     return df
 
