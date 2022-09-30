@@ -9,11 +9,13 @@ from os import makedirs, path
 import time
 
 import logging
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 # now = datetime.now()  # current date and time
 # date_time = now.strftime("%Y%m%d-%H%M%S")
 # makedirs(f'results/{date_time}', exist_ok=True)
 # prefix_folder = f'results/{date_time}'
+
 
 def create_result_df(file_path='results/result_df.csv'):
     if path.exists(file_path):
@@ -37,7 +39,8 @@ def handle_topic_df(df: pandas.DataFrame, configs, builded_corpus=None):
     if builded_corpus is None:
         start_time = time.time()
         builded_corpus = build_corpus(df)
-        print("--- Builded_corpus: %s seconds ---" % (round(time.time() - start_time)))
+        print("--- Builded_corpus: %s seconds ---" %
+              (round(time.time() - start_time)))
     # print(builded_corpus)
     word_corpus = builded_corpus['word_corpus']
     id2word = builded_corpus['id2word']
@@ -48,7 +51,8 @@ def handle_topic_df(df: pandas.DataFrame, configs, builded_corpus=None):
     lda_model = lda_training(corpus=corpus, id2word=id2word, num_topics=configs['num_topics'],
                              epoches=configs['epoches'])
 
-    eval = evaluate_lda(lda_model=lda_model, corpus=corpus, word_corpus=word_corpus, id2word=id2word)
+    eval = evaluate_lda(lda_model=lda_model, corpus=corpus,
+                        word_corpus=word_corpus, id2word=id2word)
 
     return lda_model, eval
 
@@ -83,7 +87,8 @@ def handle_global_topic(df: pandas.DataFrame, builded_corpus=None, num_words_lis
 
     for num_words in num_words_list:
         print(f"Saving (num_words={num_words})...")
-        handle_saving(lda_model, eval, num_words, -1, "GLOBAL_TOPIC", date_time)
+        handle_saving(lda_model, eval, num_words, -
+                      1, "GLOBAL_TOPIC", date_time)
 
 
 def handle_hotel_comments(df: pandas.DataFrame, num_words_list=None):
@@ -103,7 +108,8 @@ def handle_hotel_comments(df: pandas.DataFrame, num_words_list=None):
 
         for num_words in num_words_list:
             print(f"Saving (num_words={num_words})...")
-            handle_saving(lda_model, eval, num_words, name[0], name[1], date_time)
+            handle_saving(lda_model, eval, num_words,
+                          name[0], name[1], date_time)
         print("------****------\n")
 
 
@@ -128,9 +134,11 @@ def train(num_topic_cf, num_words_cf, epoches_cf, global_topic=True):
     if global_topic:
         start_time = time.time()
         builded_corpus = build_corpus(df)
-        print("---Builded_corpus: %s seconds ---" % (round(time.time() - start_time, 2)))
+        print("---Builded_corpus: %s seconds ---" %
+              (round(time.time() - start_time, 2)))
 
-    num_words_list = [num_words for num_words in range(num_words_cf[0], num_words_cf[1])]
+    num_words_list = [num_words for num_words in range(
+        num_words_cf[0], num_words_cf[1])]
 
     for num_topic in range(num_topic_cf[0], num_topic_cf[1]):
         for epoches in epoches_cf:
@@ -146,7 +154,8 @@ def train(num_topic_cf, num_words_cf, epoches_cf, global_topic=True):
 
             save_result_df(result_df)
             # ----
-            print("---Train: %s seconds ---\n" % (round(time.time() - start_time, 2)))
+            print("---Train: %s seconds ---\n" %
+                  (round(time.time() - start_time, 2)))
 
 
 # Press the green button in the gutter to run the script.

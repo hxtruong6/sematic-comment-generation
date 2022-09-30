@@ -4,12 +4,13 @@ import lda_training
 
 num_topic_cf = (8, 100)
 num_words_cf = (10, 100)
-epoches_cf = [10, 50, 100, 500, 1000, 5000]
+epoches_cf = [20]
 global_topic_cf = [True, False]
 
 
 def get_command(num_topic, num_words, epoches, global_topic):
-    cmds = ["python", "lda_training.py", f"--num_topic={num_topic}", f"--num_words={num_words}", f"--epoches={epoches}"]
+    cmds = ["python", "lda_training.py",
+            f"--num_topic={num_topic}", f"--num_words={num_words}", f"--epoches={epoches}"]
     if global_topic:
         cmds.append("--global_topic=True")
     print(f'\n------\n{cmds}')
@@ -25,4 +26,5 @@ if __name__ == "__main__":
     #                 subprocess.call(cmds)
 
     for global_topic in global_topic_cf:
-        lda_training.train(num_topic_cf, num_words_cf, epoches_cf, global_topic)
+        lda_training.train(num_topic_cf, num_words_cf,
+                           epoches_cf, global_topic)

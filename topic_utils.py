@@ -8,7 +8,8 @@ def build_corpus(df: pd.DataFrame):
     try:
         # [print(sentences.split()) for sentences in df['review_clean']]
 
-        word_corpus = [str(sentences).split() for sentences in df['review_clean']]
+        word_corpus = [str(sentences).split()
+                       for sentences in df['review_clean']]
         # Creating Document Term Matrix
         id2word = corpora.Dictionary(word_corpus)
         print('Number of unique tokens: %d' % len(id2word))
@@ -30,9 +31,9 @@ def lda_training(corpus, id2word, num_topics: int, epoches: int = 10, chunksize:
                              num_topics=num_topics,
                              random_state=100,
                              # update_every=1,
-                             # chunksize=30000,
+                             chunksize=3000,
                              passes=epoches,
-                             iterations=1000,
+                             #  iterations=50,
                              # alpha='auto',
                              per_word_topics=per_word_topics,
                              # distributed=distributed,
@@ -42,14 +43,16 @@ def lda_training(corpus, id2word, num_topics: int, epoches: int = 10, chunksize:
 
 
 def evaluate_lda(lda_model: ldamodel, corpus, word_corpus, id2word):
-    cm = CoherenceModel(model=lda_model, texts=word_corpus, dictionary=id2word, coherence='c_v')
+    cm = CoherenceModel(model=lda_model, texts=word_corpus,
+                        dictionary=id2word, coherence='c_v')
 
     eval_lda = {
         'perplexity': lda_model.log_perplexity(corpus),
         'coherence_score': cm.get_coherence()
     }
     # Compute Perplexity
-    print('Perplexity: ', eval_lda['perplexity'])  # a measure of how good the model is. lower the better.
+    # a measure of how good the model is. lower the better.
+    print('Perplexity: ', eval_lda['perplexity'])
 
     # Compute Coherence Score
     print(f"Coherence Score: {eval_lda['coherence_score']}")

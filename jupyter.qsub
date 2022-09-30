@@ -1,0 +1,8 @@
+#!/bin/bash -l
+#PBS -l walltime=01:00:00
+#PBS -l ncpus=1
+#PBS -N jupyter
+source /home/s2110149/.anaconda3/profile.d/modules.sh
+#module load python/anaconda
+hostname
+jupyter-lab
